@@ -1,0 +1,20 @@
+FROM python:3.9.19-slim AS stg1
+
+    
+COPY requirements.txt .
+
+RUN apt-get update -y && apt install -y --no-install-recommends git\
+&& pip install --no-cache-dir -U pip \ 
+    && pip install --user --no-cache-dir -r requirements.txt && rm -rf /root/.cache/pip
+
+# Stage 2: run application code
+FROM python:3.9.19-slim
+
+COPY --from=stg1 /root/.local /root/.local
+ENV PATH=/root/.local/bin:$PATH
+
+WORKDIR  /opt/mount/
+COPY . .
+
+#ENTRYPOINT ["/bin/bash"]
+# CMD ["python3", "src/eval.py"]

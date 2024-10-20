@@ -1,0 +1,32 @@
+services:
+    train:
+        build:
+            context: .
+            dockerfile: ./dockerfiles/Dockerfile.train
+        shm_size: "2gb"
+        volumes:
+          - ./model:/opt/mount/model
+          - ./data:/opt/mount/data
+          - plt_volume:/opt/mount
+
+    eval:
+        build:
+            context: .
+            dockerfile: ./dockerfiles/Dockerfile.eval
+        shm_size: "2gb"
+        volumes:
+          - ./model:/opt/mount/model
+          - ./data:/opt/mount/data
+          - plt_volume:/opt/mount
+    infer:
+        build:
+            context: .
+            dockerfile: ./dockerfiles/Dockerfile.infer
+        volumes:
+          - plt_volume:/opt/mount
+          - ./model:/opt/mount/model
+          - ./data:/opt/mount/data
+          - ./responses:/opt/mount/responses
+          - ./results:/opt/mount/results
+volumes:
+  plt_volume:

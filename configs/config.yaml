@@ -1,0 +1,13 @@
+defaults:
+  - data: dogbreed
+  - model: timm_classifier
+  - trainer: default
+  # - _self_
+  - hydra: default
+  - paths: default
+
+# trainer:
+#   _target_: train.Trainer
+#   min_epochs: 1
+#   max_epochs: 10
+  
