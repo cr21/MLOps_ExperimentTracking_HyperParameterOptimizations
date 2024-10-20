@@ -1,5 +1,5 @@
 [project]
-name = "dvc-pytorch-lightning-mlops"
+name = "dvc-pytorch-lightning-mlops-experiment-tracking-hyperparameter-optimizations"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"

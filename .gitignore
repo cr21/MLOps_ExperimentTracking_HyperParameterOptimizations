@@ -169,4 +169,5 @@ cython_debug/
 .dvc/config
 /evaluation_results
 #/predictions
+#added by dvc so git will not track data
 data
