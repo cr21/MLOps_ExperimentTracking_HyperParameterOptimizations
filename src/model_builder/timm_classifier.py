@@ -5,11 +5,11 @@ from torchmetrics import Accuracy, F1Score
 import torch.optim as optim
 import torch
 
-def get_model(model_name, num_classes, pretrained=True):
+def get_model(model_name, num_classes, pretrained=True,**kwargs):
     """
     Create base model with pretrained weights from ImageNet if specified.
     """
-    model = timm.create_model(model_name, pretrained=pretrained)
+    model = timm.create_model(model_name, pretrained=pretrained,**kwargs)
     model.reset_classifier(num_classes)
     return model
 
@@ -24,9 +24,10 @@ class TimmClassifier(pl.LightningModule):
         patience: int = 3,
         factor: float = 0.1,
         min_lr: float = 1e-6,
+        **kwargs,
     ):
         super().__init__()
-        self.model = get_model(base_model, num_classes, pretrained)
+        self.model = get_model(base_model, num_classes, pretrained,**kwargs)
         self.num_classes = num_classes
         self.learning_rate = learning_rate
         self.weight_decay = weight_decay

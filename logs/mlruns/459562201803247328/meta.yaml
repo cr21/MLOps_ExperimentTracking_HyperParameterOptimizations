@@ -1,0 +1,6 @@
+artifact_location: file:///Users/chiragtagadiya/MyProjects/EMLO_V4_projects/MLOps_ExperimentTracking_HyperParameterOptimizations/logs//mlruns/459562201803247328
+creation_time: 1729486917100
+experiment_id: '459562201803247328'
+last_update_time: 1729486917100
+lifecycle_stage: active
+name: bird_classification

@@ -1,6 +1,6 @@
 from pathlib import Path
 import lightning as L
-from typing import Union, Optional, List
+from typing import Union, Optional, List, Tuple
 from torchvision import transforms, datasets
 from torch.utils.data import DataLoader, random_split
 from lightning.pytorch.utilities.types import TRAIN_DATALOADERS, EVAL_DATALOADERS
@@ -15,7 +15,9 @@ class GenericDataModule(L.LightningDataModule):
         train_transform: Optional[transforms.Compose] = None,
         test_transform: Optional[transforms.Compose] = None,
         splits: List[float] = [0.8, 0.1, 0.1],
-        name: str = "generic_datamodule"
+        name: str = "generic_datamodule",
+        image_size: Tuple[int, int] = (224, 224)
+
     ):
         super().__init__()
         self.name = name
@@ -24,17 +26,18 @@ class GenericDataModule(L.LightningDataModule):
         self.batch_size = batch_size
         self.pin_memory = pin_memory
         self.splits = splits
+        self.image_size = image_size
         
         # Default transformations
         self.default_train_transform = transforms.Compose([
-            transforms.RandomResizedCrop(224),
+            transforms.RandomResizedCrop(self.image_size),
             transforms.RandomHorizontalFlip(),
             transforms.ToTensor(),
             transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
         ])
         self.default_test_transform = transforms.Compose([
             transforms.Resize(256),
-            transforms.CenterCrop(224),
+            transforms.CenterCrop(self.image_size),
             transforms.ToTensor(),
             transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
         ])

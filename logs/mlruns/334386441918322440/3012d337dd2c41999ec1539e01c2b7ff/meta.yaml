@@ -1,0 +1,15 @@
+artifact_uri: file:///Users/chiragtagadiya/MyProjects/EMLO_V4_projects/MLOps_ExperimentTracking_HyperParameterOptimizations/logs//mlruns/334386441918322440/3012d337dd2c41999ec1539e01c2b7ff/artifacts
+end_time: 1729491949951
+entry_point_name: ''
+experiment_id: '334386441918322440'
+lifecycle_stage: active
+run_id: 3012d337dd2c41999ec1539e01c2b7ff
+run_name: dogbreed_classification_vit_tiny_patch16_224123
+run_uuid: 3012d337dd2c41999ec1539e01c2b7ff
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1729491768128
+status: 3
+tags: []
+user_id: chiragtagadiya

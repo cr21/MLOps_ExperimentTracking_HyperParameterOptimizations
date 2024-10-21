@@ -1,7 +1,6 @@
 import os
 from pathlib import Path
 import sys
-
 import rootutils
 
 # Setup the root directory
@@ -32,8 +31,6 @@ def instantiate_callbacks(callback_cfg: DictConfig) -> List[pl.Callback]:
         return callbacks
     i=0
     for _, cb_conf in callback_cfg.items():
-        print(cb_conf)
-        print(i)
         i+=1
         if "_target_" in cb_conf:
             log.info(f"Instantiating callback <{cb_conf._target_}>")

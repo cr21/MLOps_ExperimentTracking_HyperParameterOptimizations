@@ -16,6 +16,7 @@ data:
   batch_size: 32
   num_workers: 0
   pin_memory: True
+  image_size: [160,160]
 
 # Increase the number of epochs for better training
 trainer:
@@ -24,9 +25,18 @@ trainer:
 
 # Adjust learning rate and batch size
 model:
-  base_model: "vit_tiny_patch16_224"
-  learning_rate: 1e-4
+  base_model: "test_vit.r160_in1k"
+  learning_rate: 1e-3
   num_classes: 11
+  pretrained: False
+  patch_size: 16
+  embed_dim: 64
+  depth: 6
+  num_heads: 2
+  mlp_ratio: 3
+
+
+
 
 
 # Early stopping configuration
@@ -43,5 +53,14 @@ callbacks:
     save_top_k: 1
     save_last: True
 
+# logger configuration
+logger:
+  aim:
+    experiment: ${name}
+    run_name: ${model.base_model}_run_${seed}
+  mlflow:
+    experiment_name: ${name}
+    run_name: ${model.base_model}_run_${seed}
+
 # Tags for experiment tracking
-tags: ["birddata", "classification", "vit_tiny_patch16_224"]
+tags: ["birddata", "classification"]

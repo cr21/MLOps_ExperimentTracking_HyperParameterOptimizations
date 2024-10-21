@@ -1,0 +1,15 @@
+artifact_uri: file:///Users/chiragtagadiya/MyProjects/EMLO_V4_projects/MLOps_ExperimentTracking_HyperParameterOptimizations/logs//mlruns/459562201803247328/2064dccede5c43aeaa3ce6f66f2d56d7/artifacts
+end_time: 1729486999313
+entry_point_name: ''
+experiment_id: '459562201803247328'
+lifecycle_stage: active
+run_id: 2064dccede5c43aeaa3ce6f66f2d56d7
+run_name: test_vit.r160_in1k_run_980123
+run_uuid: 2064dccede5c43aeaa3ce6f66f2d56d7
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1729486917471
+status: 3
+tags: []
+user_id: chiragtagadiya

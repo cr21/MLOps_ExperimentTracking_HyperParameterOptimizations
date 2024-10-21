@@ -45,3 +45,12 @@ callbacks:
 
 # Tags for experiment tracking
 tags: ["dogbreed", "classification", "resnet18"]
+
+# logger configuration
+logger:
+  aim:
+    experiment: ${name}
+    run_name: ${model.base_model}_run_${seed}
+  mlflow:
+    experiment_name: ${name}
+    run_name: ${model.base_model}_run_${seed}
