@@ -139,7 +139,8 @@ def test(cfg: Optional[DictConfig] = None, trainer: Optional[pl.Trainer] = None,
                           filename='test_confusion_matrix.png')
 
     log.info(f"Test metrics:\n{test_metrics}")  
-    return test_metrics
+    return test_metrics[0] if  test_metrics else {}
+
 
 @hydra.main(version_base=None, config_path="../configs", config_name="train")
 def main(cfg: DictConfig):
@@ -166,16 +167,24 @@ def main(cfg: DictConfig):
     trainer: pl.Trainer = hydra.utils.instantiate(cfg.trainer, callbacks=callbacks, logger=loggers)
     # Train the model
     if cfg.get("train"):
-        train(cfg, trainer, model, datamodule)
+        train_metrics = train(cfg, trainer, model, datamodule)
+    else:
+        train_metrics = {}
 
     # Test the model
     if cfg.get("test"):
-        test(cfg, trainer, model, datamodule)
+        test_metrics = test(cfg, trainer, model, datamodule)
+    else:
+        test_metrics = {}
 
-    # # Return metric score for hyperparameter optimization
-    # optimized_metric = cfg.get("optimized_metric")
-    # if optimized_metric and optimized_metric in trainer.callback_metrics:
-    #     return trainer.callback_metrics[optimized_metric]
+    all_metrics = {**train_metrics, **test_metrics}
+
+    # Extract and return the optimized metric
+    optimization_metric = all_metrics.get(cfg.optimization_metrics)
+    if optimization_metric is None:
+        log.warning(f"Optimized metric '{cfg.optimization_metrics}' not found in metrics.")
+        return 0.0
+    return optimization_metric
 
 if __name__ == "__main__":
     main()

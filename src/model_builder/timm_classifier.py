@@ -1,7 +1,7 @@
 import lightning as pl
 import timm
 import torch.nn as nn
-from torchmetrics import Accuracy, F1Score
+from torchmetrics import Accuracy, F1Score, MaxMetric
 import torch.optim as optim
 import torch
 
@@ -36,8 +36,13 @@ class TimmClassifier(pl.LightningModule):
         self.min_lr = min_lr
         
         self.loss_fn = nn.CrossEntropyLoss()
-        self.accuracy = Accuracy(task='multiclass', num_classes=num_classes, average='weighted')
-        self.f1_score = F1Score(task='multiclass', num_classes=num_classes, average='weighted')
+        self.test_accuracy = Accuracy(task='multiclass', num_classes=num_classes, average='weighted')
+        self.train_accuracy = Accuracy(task='multiclass', num_classes=num_classes, average='weighted')
+        self.val_accuracy = Accuracy(task='multiclass', num_classes=num_classes, average='weighted')
+        self.test_f1_score = F1Score(task='multiclass', num_classes=num_classes, average='weighted')
+        self.train_f1_score = F1Score(task='multiclass', num_classes=num_classes, average='weighted')
+        self.val_f1_score = F1Score(task='multiclass', num_classes=num_classes, average='weighted')
+        self.test_acc_best = MaxMetric()
         
         self.save_hyperparameters()
 
@@ -52,8 +57,8 @@ class TimmClassifier(pl.LightningModule):
 
     def training_step(self, batch, batch_idx):
         loss, out, y = self.__common_step(batch, batch_idx)
-        accuracy = self.accuracy(out, y)
-        f1score = self.f1_score(out, y)
+        accuracy = self.train_accuracy(out, y)
+        f1score = self.train_f1_score(out, y)
         self.log_dict({
             'train/loss': loss,
             'train/acc': accuracy,
@@ -63,8 +68,8 @@ class TimmClassifier(pl.LightningModule):
 
     def validation_step(self, batch, batch_idx):
         loss, out, y = self.__common_step(batch, batch_idx)
-        accuracy = self.accuracy(out, y)
-        f1score = self.f1_score(out, y)
+        accuracy = self.val_accuracy(out, y)
+        f1score = self.val_f1_score(out, y)
         self.log_dict({
             'val/loss': loss,
             'val/acc': accuracy,
@@ -74,14 +79,18 @@ class TimmClassifier(pl.LightningModule):
 
     def test_step(self, batch, batch_idx):
         loss, out, y = self.__common_step(batch, batch_idx)
-        accuracy = self.accuracy(out, y)
-        f1score = self.f1_score(out, y)
+        accuracy = self.test_accuracy(out, y)
+        f1score = self.test_f1_score(out, y)
         self.log_dict({
             'test/loss': loss,
             'test/acc': accuracy,
             'test/f1': f1score,
         }, on_epoch=True, on_step=False, prog_bar=True)
         return loss
+
+    def on_test_epoch_end(self):
+        self.test_acc_best.update(self.test_accuracy.compute()) 
+        self.log('test/acc_best', self.test_acc_best.compute(), prog_bar=True)  
 
     def configure_optimizers(self):
         optimizer = optim.Adam(self.parameters(), lr=self.learning_rate, weight_decay=self.weight_decay)

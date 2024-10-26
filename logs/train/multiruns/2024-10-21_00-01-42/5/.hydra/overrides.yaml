@@ -1,5 +1,0 @@
-- experiment=bird_classifier_ex
-- +trainer.log_every_n_steps=1
-- seed=980123
-- model.embed_dim=32
-- model.num_heads=8

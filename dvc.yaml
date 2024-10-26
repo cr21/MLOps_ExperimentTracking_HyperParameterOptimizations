@@ -10,18 +10,18 @@ stages:
     outs:
     - logs:
         cache: false
-  evaluation:
-    cmd: python3 src/eval.py data=birddata evaluation=bird_eval
-    deps:
-    - configs/evaluation/dogbreed_eval.yaml
-    - configs/evaluation/bird_eval.yaml
-    - configs/data/birddata.yaml
-    - configs/data/dogbreed.yaml
-    - data
-    - src/eval.py
-    outs:
-    - evaluations:
-        cache: false
+  # evaluation:
+  #   cmd: python3 src/eval.py data=birddata evaluation=bird_eval
+  #   deps:
+  #   - configs/evaluation/dogbreed_eval.yaml
+  #   - configs/evaluation/bird_eval.yaml
+  #   - configs/data/birddata.yaml
+  #   - configs/data/dogbreed.yaml
+  #   - data
+  #   - src/eval.py
+  #   outs:
+  #   - evaluations:
+  #       cache: false
   inference:
     cmd: python3 src/infer.py data=birddata inference=bird_infer
     deps:

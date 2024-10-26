@@ -1,0 +1,40 @@
+# @package _global_
+defaults:
+  - override /hydra/sweeper: optuna
+  - override /hydra/launcher: joblib
+
+name: "test_vit_r160_hparam"
+experiment_name: "test_vit_r160_hparam"
+optimization_metrics: "test/acc_best"
+
+hydra:
+  sweeper:
+    sampler:
+      _target_: optuna.samplers.TPESampler
+      seed: 123
+      n_startup_trials: 4
+    direction: maximize
+    study_name: test_vit_r160_hparam_optimization
+    storage: null
+    n_trials: 30
+    n_jobs: 4 
+    params:
+      model.base_model: "test_vit.r160_in1k"
+      model.num_classes: 11
+      model.pretrained: False
+      model.patch_size: choice(8, 16, 32)
+      model.embed_dim: choice(16, 32, 48)
+      model.num_heads: choice(2, 4, 8)
+      model.mlp_ratio: choice(2.0, 4.0)
+
+  launcher:
+    n_jobs: 3
+    backend: 'loky'
+
+data:
+  batch_size: 32
+  image_size: 224
+
+trainer:
+  min_epochs: 1
+  max_epochs: 10

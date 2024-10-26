@@ -24,13 +24,21 @@ if not all(col in data.columns for col in ['epoch', 'train/acc', 'train/loss']):
     print("Error: Required columns are missing in the metrics file.")
     sys.exit(1)
 
-# Generate test metrics table report in test_metrics.md
-with open('test_metrics.md', 'w') as f:
+# Create markdown_results folder if it doesn't exist
+os.makedirs('markdown_results', exist_ok=True)
+
+# Generate test metrics table report in markdown_results/test_metrics.md
+with open('markdown_results/test_metrics.md', 'w') as f:
     f.write("## Test Metrics\n")
     f.write("| Metric | Value |\n")
     f.write("|--------|-------|\n")
     f.write(f"| Test Accuracy | {data['test/acc'].iloc[-1]} |\n")  # Assuming last entry is the latest
     f.write(f"| Test Loss | {data['test/loss'].iloc[-1]} |\n")  # Assuming last entry is the latest
+
+
+# Comment out validation accuracy, training loss, and validation loss plots
+"""
+
 
 # Plot Training Accuracy
 plt.figure(figsize=(10, 5))
@@ -75,6 +83,7 @@ plt.xticks(data['epoch'])
 plt.legend()
 plt.savefig('val_loss_plot.png')
 plt.close()
+"""
 
 # Create Collage of Predictions
 predictions_dir = './predictions'
@@ -105,6 +114,6 @@ if images:
     collage_image.save('predictions_collage.png')
 
 # Create Predictions Markdown
-with open('predictions.md', 'w') as f:
+with open('markdown_results/predictions.md', 'w') as f:
     f.write("### Predictions Collage\n")
-    f.write(f"<img src='predictions_collage.png' width='800' />\n")
+    f.write(f"<img src='../predictions_collage.png' width='800' />\n")
