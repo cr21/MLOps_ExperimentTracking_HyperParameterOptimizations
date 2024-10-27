@@ -123,7 +123,8 @@ jobs:
           REPO_TOKEN: ${{ secrets.REPO_TOKEN }}  # Use secret for repository token
         run: |
           echo "# Hyperparameter Optimization Results" >> report.md
-
+          echo "### Best Hyperparameters" >> report.md
+          cat markdown_results/best_hparams.md >> report.md
           echo "## Model Training Results" >> report.md
           echo "### Training Metrics" >> report.md
           echo "![Training Loss](./plots/train_loss_plot.png)" >> report.md
@@ -147,8 +148,7 @@ jobs:
           echo "### Hyperparameter Table" >> report.md
           cat markdown_results/hyperparameter_table.md >> report.md
 
-          echo "### Best Hyperparameters" >> report.md
-          cat markdown_results/best_hparams.md >> report.md
+          
           
           # Post CML report as a comment in GitHub
           cml comment create report.md
