@@ -110,7 +110,7 @@ jobs:
 
       - name: Train model
         run: |
-          uv rm -rf -f .aim 
+          rm -rf -f .aim 
           uv run aim init
           uv run dvc repro  # Run your training script with uv
       - name: Generate plots
