@@ -2,7 +2,7 @@ stages:
   train:
     #cmd: python3 src/train.py experiment=dogbreed_ex +trainer.log_every_n_steps=5
     #cmd: python3 src/train.py experiment=bird_classifier_ex +trainer.log_every_n_steps=1
-    cmd: python3 src/train.py --multirun  hparam=bird_mobilenet_v3_hparam  experiment=bird_classifier_mobilenetv3 data=birddata hydra.sweeper.n_jobs=2 hydra.launcher.n_jobs=2 +trainer.log_every_n_steps=1
+    cmd: python3 src/train.py --multirun  hparam=bird_mobilenet_v3_hparam  experiment=bird_classifier_mobilenetv3 data=birddata  logger.mlflow.run_name=optuna_bird_mobilenetv3_run  logger.aim.run_name=optuna_bird_mobilenetv3_run hydra.sweeper.n_jobs=2 hydra.launcher.n_jobs=2 +trainer.log_every_n_steps=1 
     deps:
     - configs/hparam/bird_mobilenet_v3_hparam.yaml
     - configs/experiment/bird_classifier_mobilenetv3.yaml
