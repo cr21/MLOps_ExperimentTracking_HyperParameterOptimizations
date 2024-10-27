@@ -1,0 +1,97 @@
+schema: '2.0'
+stages:
+  train:
+    cmd: python3 src/train.py --multirun  hparam=bird_mobilenet_v3_hparam  experiment=bird_classifier_mobilenetv3  hydra.sweeper.n_jobs=2
+      hydra.launcher.n_jobs=2 +trainer.log_every_n_steps=1
+    deps:
+    - path: configs/experiment/bird_classifier_mobilenetv3.yaml
+      hash: md5
+      md5: f13cec1da7f55018621dd4b27f84746d
+      size: 1253
+    - path: configs/hparam/bird_mobilenet_v3_hparam.yaml
+      hash: md5
+      md5: cbf4d842fb7b1ff5d2305fb598a7c5e8
+      size: 992
+    - path: data
+      hash: md5
+      md5: 97508e4c8a46a85e3cd8e35c13f8a74e.dir
+      size: 66665399
+      nfiles: 1581
+    - path: src/train.py
+      hash: md5
+      md5: 272c39e806c92bb1991586c71a1453e6
+      size: 7108
+    outs:
+    - path: logs
+      hash: md5
+      md5: 0e886c889265f2f920d0bda84c000530.dir
+      size: 86898
+      nfiles: 174
+  optimize_training:
+    cmd: python3 src/train_optimized_hparam.py experiment=bird_classifier_mobilenetv3
+    deps:
+    - path: configs/experiment/bird_classifier_mobilenetv3.yaml
+      hash: md5
+      md5: f13cec1da7f55018621dd4b27f84746d
+      size: 1253
+    - path: configs/hparam/bird_mobilenet_v3_hparam.yaml
+      hash: md5
+      md5: cbf4d842fb7b1ff5d2305fb598a7c5e8
+      size: 992
+    - path: data
+      hash: md5
+      md5: 97508e4c8a46a85e3cd8e35c13f8a74e.dir
+      size: 66665399
+      nfiles: 1581
+    - path: src/train_optimized_hparam.py
+      hash: md5
+      md5: 16f3f353c8b42720e9d5374a7d3fe7fd
+      size: 4257
+    outs:
+    - path: markdown_results/best_hparams.md
+      hash: md5
+      md5: fbeade9a113b0129a25c5fbe0894ea5d
+      size: 150
+  inference:
+    cmd: python3 src/infer.py data=birddata inference=bird_mobilenet_v3_infer
+    deps:
+    - path: configs/data/birddata.yaml
+      hash: md5
+      md5: efa7567394a373df4225241190b6f037
+      size: 312
+    - path: configs/inference/bird_mobilenet_v3_infer.yaml
+      hash: md5
+      md5: e6da89cdee70cfc15b748bb7b7074bac
+      size: 240
+    - path: data
+      hash: md5
+      md5: 97508e4c8a46a85e3cd8e35c13f8a74e.dir
+      size: 66665399
+      nfiles: 1581
+    - path: src/infer.py
+      hash: md5
+      md5: 3d919b06ac867411c16b5803247066cd
+      size: 3446
+    outs:
+    - path: predictions
+      hash: md5
+      md5: 774b6470eaf05a3ee27040639298fdd7.dir
+      size: 4095597
+      nfiles: 10
+  analyze_experiment:
+    cmd: python3 src/utils/analyze_experiments.py
+    deps:
+    - path: src/utils/analyze_experiments.py
+      hash: md5
+      md5: 1e60895b02129c056df34ff8d44ac5b9
+      size: 10353
+    outs:
+    - path: markdown_results/hyperparameter_table.md
+      hash: md5
+      md5: 4dd9a7face68e9a0682222c61320ada2
+      size: 1854
+    - path: plots
+      hash: md5
+      md5: 8a65188f936a3d0c96f64df64d9756f0.dir
+      size: 1092316
+      nfiles: 7

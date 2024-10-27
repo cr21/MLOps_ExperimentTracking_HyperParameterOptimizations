@@ -11,6 +11,16 @@ stages:
     outs:
     - logs:
         cache: false
+  # analyze experiment
+  analyze_experiment:
+    cmd: python3 src/utils/analyze_experiments.py
+    deps:
+    - src/utils/analyze_experiments.py
+    outs:
+    - plots:
+        cache: false
+    - markdown_results/hyperparameter_table.md:
+        cache: false
   optimize_training:
     cmd: python3 src/train_optimized_hparam.py experiment=bird_classifier_mobilenetv3
     deps:
@@ -19,7 +29,7 @@ stages:
     - src/train_optimized_hparam.py
     - data
     outs:
-    - logs:
+    - markdown_results/best_hparams.md:
         cache: false
   # evaluation:
   #   cmd: python3 src/eval.py data=birddata evaluation=bird_eval

@@ -22,7 +22,7 @@ data:
 # Increase the number of epochs for better training
 trainer:
   min_epochs: 1
-  max_epochs: 10
+  max_epochs: 1
 
 # Adjust learning rate and batch size
 model:

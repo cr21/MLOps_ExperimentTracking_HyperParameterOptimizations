@@ -3,7 +3,7 @@ name: Train and Report
 on:
   push:
     branches:
-      - main1  # Adjust this to your default branch
+      - main  # Adjust this to your default branch
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
@@ -103,39 +103,52 @@ jobs:
           uv run dvc pull --remote gdrive
           #uv run dvc pull --remote s3_store  # Pull data from S3
         env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}  # AWS Access Key ID
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}  # AWS Secret Access Key
-          AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}  # Optional: AWS region
+          #AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}  # AWS Access Key ID
+          #AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}  # AWS Secret Access Key
+          #AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}  # Optional: AWS region
           GDRIVE_CREDENTIALS_DATA: ${{ secrets.GDRIVE_CREDENTIALS_DATA }}  # Use secret for Google Drive credentials
 
       - name: Train model
         run: |
+          aim init
           uv run dvc repro  # Run your training script with uv
-
       - name: Generate plots
-        run: |
+        run: 
           uv run python src/utils/generate_plots.py # Script to generate plots with uv
-          
+      # - name: analyze experiment
+      #   run: |
+      #     uv run python src/analyze_experiment.py
       - name: Create CML report
         env:
           REPO_TOKEN: ${{ secrets.REPO_TOKEN }}  # Use secret for repository token
         run: |
+          echo "# Hyperparameter Optimization Results" >> report.md
+
           echo "## Model Training Results" >> report.md
           echo "### Training Metrics" >> report.md
-          echo "![Training Loss](./train_loss_plot.png)" >> report.md
-          echo "![Validation Loss](./val_loss_plot.png)" >> report.md
-          echo "![Training Accuracy](./train_acc_plot.png)" >> report.md
-          echo "![Training Accuracy](./val_acc_plot.png)" >> report.md
+          echo "![Training Loss](./plots/train_loss_plot.png)" >> report.md
+          echo "![Training Accuracy](./plots/train_acc_plot.png)" >> report.md
+          echo "![Validation Loss](./plots/val_loss_plot.png)" >> report.md
+          echo "![Validation Accuracy](./plots/val_acc_plot.png)" >> report.md
+          echo "![Test Loss](./plots/test_loss_plot.png)" >> report.md
+          echo "![Test Accuracy](./plots/test_acc_plot.png)" >> report.md
+          echo "![Test Best Accuracy](./plots/test_best_acc_plot.png)" >> report.md
           
           echo "### Confusion Matrices" >> report.md
-          echo "![Training Confusion Matrix](./train_confusion_matrix.png)" >> report.md
-          echo "![Test Confusion Matrix](./test_confusion_matrix.png)" >> report.md
+          echo "![Training Confusion Matrix](./plots/train_confusion_matrix.png)" >> report.md
+          echo "![Test Confusion Matrix](./plots/test_confusion_matrix.png)" >> report.md
           
           echo "### Predictions" >> report.md
           echo "![Predictions](./predictions_collage.png)" >> report.md
           
           echo "### Test Metrics" >> report.md
-          cat test_metrics.md >> report.md
+          cat markdown_results/test_metrics.md >> report.md
+
+          echo "### Hyperparameter Table" >> report.md
+          cat markdown_results/hyperparameter_table.md >> report.md
+
+          echo "### Best Hyperparameters" >> report.md
+          cat markdown_results/best_hparams.md >> report.md
           
           # Post CML report as a comment in GitHub
           cml comment create report.md

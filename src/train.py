@@ -64,7 +64,13 @@ def plot_confusion_matrix(y_true, y_pred, class_names, title, filename):
     plt.ylabel('True Labels')
     plt.xticks(rotation=45)  # Rotate x-axis labels for better visibility
     plt.yticks(rotation=0)   # Rotate y-axis labels for better visibility
-    plt.savefig(filename)
+    
+    # Create @plots directory if it doesn't exist
+    plots_dir = Path("plots")
+    plots_dir.mkdir(exist_ok=True)
+    
+    # Save the plot in the @plots directory
+    plt.savefig(plots_dir / filename)
     plt.close()
 
 @task_wrapper
