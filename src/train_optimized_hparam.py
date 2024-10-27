@@ -7,6 +7,7 @@ import hydra
 from omegaconf import DictConfig, OmegaConf
 import logging
 from typing import Dict, Any
+import shutil
 
 # Setup the root directory
 root = rootutils.setup_root(__file__, indicator=".project-root", pythonpath=True)
@@ -67,14 +68,26 @@ def main(cfg: DictConfig):
     # Find the best hyperparameters
     multirun_log_dir = log_dir / "train" / "multiruns"
     best_hparams = find_best_hparams(multirun_log_dir)
-    # write best hparams to a markdown file inside markdown results folder
-    # if directory does not exist, create it
-    if not os.path.exists("markdown_results"):
-        os.makedirs("markdown_results")
-    with open("markdown_results" / "best_hparams.md", "w") as f:
+    
+    # Create markdown_results directory if it doesn't exist
+    markdown_results_dir = Path("markdown_results")
+    markdown_results_dir.mkdir(exist_ok=True)
+    
+    # Write best hparams to a markdown file inside markdown_results folder
+    with open(markdown_results_dir / "best_hparams.md", "w") as f:
         f.write(OmegaConf.to_yaml(best_hparams))
+    
     # Update the config with the best hyperparameters
     cfg = update_model_config(cfg, best_hparams)
+
+    # Construct the checkpoint path
+    checkpoints_dir = Path("checkpoints") / cfg.name
+
+    # Delete existing checkpoints directory and recreate it
+    if checkpoints_dir.exists():
+        shutil.rmtree(checkpoints_dir)
+    checkpoints_dir.mkdir(parents=True, exist_ok=True)
+    log.info(f"Recreated checkpoints directory: {checkpoints_dir}")
 
     # Create data module
     log.info(f"Instantiating datamodule <{cfg.data._target_}>")
@@ -109,4 +122,3 @@ def main(cfg: DictConfig):
 
 if __name__ == "__main__":
     main()
-
