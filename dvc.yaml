@@ -6,6 +6,7 @@ stages:
     deps:
     - configs/hparam/bird_mobilenet_v3_hparam.yaml
     - configs/experiment/bird_classifier_mobilenetv3.yaml
+    - configs/data/birddata.yaml
     - src/train.py
     - data
     outs:
