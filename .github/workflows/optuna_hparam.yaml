@@ -111,6 +111,8 @@ jobs:
       - name: Train model
         run: |
           rm -rf -f .aim 
+          rm -rf -f markdown_results
+          rm -rf -f logs/*
           uv run aim init
           uv run dvc repro  # Run your training script with uv
       - name: Generate plots
