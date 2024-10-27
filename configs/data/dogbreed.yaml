@@ -1,0 +1,10 @@
+# dataset: dogbreed
+_target_: src.datamodules.data_module.GenericDataModule
+data_dir: ${oc.env:PROJECT_ROOT}/data/dogbreed
+num_workers: 4
+batch_size: 64
+pin_memory: true
+splits: [0.8, 0.1, 0.1]
+train_transform: null 
+test_transform: null  
+image_size: [224, 224]  #

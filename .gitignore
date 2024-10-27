@@ -170,5 +170,8 @@ cython_debug/
 /evaluation_results
 #/predictions
 #added by dvc so git will not track data
-data
+#data
 .aim/
+
+# Ignore only the root data folder
+/data
